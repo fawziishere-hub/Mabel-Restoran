@@ -76,15 +76,15 @@ function AppContent() {
             } 
           />
 
-          {/* Admin Protected Route */}
-          <Route 
-            path="/admin" 
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
+      {/* Admin Protected Route */}
+<Route 
+  path="/admin" 
+  element={
+    <ProtectedRoute requireAdmin={false}> {/* <-- Change this to false temporarily */}
+      <AdminDashboard />
+    </ProtectedRoute>
+  } 
+/>
         </Routes>
       </main>
 
