@@ -88,7 +88,7 @@ const AdminDashboard = () => {
       
       <aside className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex fixed h-full z-20">
         <div className="p-6 flex items-center gap-4 border-b border-slate-800">
-          <img src="/images/20.jpg" alt="Mabel Logo" className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 shadow-md" />
+          <img src="/images/450201304_1539576273654166_470384146796434157_n (1).jpg" alt="Mabel Logo" className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 shadow-md" />
           <span className="text-2xl font-black tracking-tight text-white">Mabel <span className="text-orange-500">Admin</span></span>
         </div>
         <nav className="flex-1 p-4 space-y-2">
