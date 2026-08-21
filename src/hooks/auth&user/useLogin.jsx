@@ -16,36 +16,33 @@ export const useLogin = () => {
 
       if (authError) throw new Error(authError.message);
 
-      // 2. Fetch the user's profile to get their specific role
+      // 2. Fetch the profile by EMAIL (Bypasses the ID mismatch issue!)
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', authData.user.id)
+        .eq('email', data.email)
         .single();
 
       if (profileError && profileError.code !== 'PGRST116') {
         console.error("Profile fetch error:", profileError);
       }
 
-      // 3. Merge profile data (like role and name) into the user object
+      // 3. Merge profile data
       const userWithRole = { 
         ...authData.user, 
         role: profile?.role || 'customer', 
         name: profile?.full_name || profile?.name || 'Kullanıcı'
       };
 
-      // Return the ENRICHED user
       return { session: authData.session, user: userWithRole };
     },
     
-    // Notice we use "data" here now, which is exactly what mutationFn returned above!
     onSuccess: (data) => {
-      // Save the enriched user data to local storage
       localStorage.setItem(
         "token",
         JSON.stringify({
           token: data.session.access_token,
-          user: data.user, // This now successfully includes the role!
+          user: data.user, 
         })
       );
       
@@ -54,12 +51,15 @@ export const useLogin = () => {
         JSON.stringify(Date.now() + 24 * 60 * 60 * 1000)
       );
       
-      toast.success("Başarıyla giriş yapıldı!");
+      // 🚨 GOD MODE DEBUGGER: This will pop up on your screen when you log in!
+      alert(`Debug: Veritabanından çekilen rolünüz -> "${data.user.role}"`);
 
-      // RBAC MAGIC: Route based on the successfully saved role
+      // RBAC Route logic
       if (data.user.role === "admin") {
+        toast.success("Yönetici girişi başarılı!");
         navigate("/admin", { replace: true });
       } else {
+        toast.success("Başarıyla giriş yapıldı!");
         navigate("/dashboard", { replace: true });
       }
     },
