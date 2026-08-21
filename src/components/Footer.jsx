@@ -13,8 +13,22 @@ const Footer = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="w-full bg-orange-50/50 dark:bg-slate-900 mt-20">
-      {/* CTA / Info Section */}
+    <footer className="w-full bg-orange-50/50 dark:bg-slate-900 mt-20 relative">
+      
+      {/* GLOBAL FLOATING WHATSAPP BUTTON */}
+      <a
+        href="https://wa.me/905528610563" 
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/40 transition-transform hover:scale-110 hover:bg-[#20b858]"
+        aria-label="WhatsApp İletişim"
+      >
+        <svg className="w-9 h-9" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+      </a>
+
+      {/* CTA Section */}
       {pathname !== "/about" && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -24,50 +38,14 @@ const Footer = () => {
           className="bg-orange-500 mx-4 md:mx-8 lg:mx-16 rounded-3xl -mb-10 z-10 relative shadow-2xl overflow-hidden"
         >
           <div className="flex flex-col lg:flex-row">
-            {/* Image Section */}
             <div className="relative w-full lg:w-[45%] min-h-[280px] lg:min-h-[320px] flex items-center justify-center overflow-hidden">
-              <motion.img
-                initial={{ scale: 1.1, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                src="/images/20.jpg"
-                alt="Mabel Kafe Bahçe"
-                className="absolute inset-0 w-full h-full object-cover opacity-90"
-              />
+              <img src="/images/20.jpg" alt="Mabel Kafe Bahçe" className="absolute inset-0 w-full h-full object-cover opacity-90" />
               <div className="absolute inset-0 bg-orange-900/20 mix-blend-multiply"></div>
             </div>
-
-            {/* Content Section */}
             <div className="w-full lg:w-[55%] p-8 lg:p-12 flex flex-col justify-center items-center lg:items-start text-center lg:text-left z-10 bg-orange-500">
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="text-2xl md:text-3xl lg:text-[2.5rem] font-black text-white leading-tight mb-4"
-              >
-                Doğanın İçinde Lezzet Şöleni
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-orange-50 mb-6 text-lg font-medium"
-              >
-                Üreğil Millet Bahçesi'nin muhteşem manzarası eşliğinde, aileniz ve sevdiklerinizle unutulmaz anlar yaşayın.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <Link
-                  to="/rezervasyon"
-                  className="rounded-xl bg-white px-8 py-4 font-bold text-orange-600 shadow-lg transition-transform hover:scale-105 inline-block"
-                >
-                  Masada Yerini Ayırt
-                </Link>
-              </motion.div>
+              <h2 className="text-2xl md:text-3xl lg:text-[2.5rem] font-black text-white leading-tight mb-4">Doğanın İçinde Lezzet Şöleni</h2>
+              <p className="text-orange-50 mb-6 text-lg font-medium">Üreğil Millet Bahçesi'nin muhteşem manzarası eşliğinde, aileniz ve sevdiklerinizle unutulmaz anlar yaşayın.</p>
+              <Link to="/rezervasyon" className="rounded-xl bg-white px-8 py-4 font-bold text-orange-600 shadow-lg transition-transform hover:scale-105 inline-block">Masada Yerini Ayırt</Link>
             </div>
           </div>
         </motion.div>
@@ -76,78 +54,31 @@ const Footer = () => {
       {/* Main Footer */}
       <div className="bg-slate-900 px-4 md:px-8 lg:px-16 pt-32 pb-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
             
             {/* Brand Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="lg:col-span-2"
-            >
+            <div className="lg:col-span-3">
               <div className="flex items-center gap-2 cursor-pointer mb-4" onClick={() => navigate("/")}>
-                <img 
-                  src="/images/450201304_1539576273654166_470384146796434157_n (1).jpg" 
-                  alt="Mabel Logo" 
-                  className="h-12 w-auto bg-white rounded-md p-1 object-contain"
-                />
+                <img src="/images/450201304_1539576273654166_470384146796434157_n (1).jpg" alt="Mabel Logo" className="h-12 w-auto bg-white rounded-md p-1 object-contain" />
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed my-3 max-w-xs font-medium">
+              <p className="text-slate-400 text-sm leading-relaxed my-3 font-medium">
                 En taze ürünler, el yapımı lezzetler ve güler yüzlü hizmet ile Ankara'daki yeni lezzet durağınız.
               </p>
-            </motion.div>
+            </div>
 
             {/* Quick Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
+            <div className="lg:col-span-2">
               <h3 className="font-bold text-white mb-4 text-base">Hızlı Menü</h3>
               <ul className="space-y-3">
-                <motion.li whileHover={{ x: 5 }}>
-                  <Link to="/" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Ana Sayfa</Link>
-                </motion.li>
-                <motion.li whileHover={{ x: 5 }}>
-                  <Link to="/menu" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Menümüz</Link>
-                </motion.li>
-                <motion.li whileHover={{ x: 5 }}>
-                  <Link to="/rezervasyon" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Rezervasyon</Link>
-                </motion.li>
+                <li><Link to="/" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Ana Sayfa</Link></li>
+                <li><Link to="/menu" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Menümüz</Link></li>
+                <li><Link to="/rezervasyon" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Rezervasyon</Link></li>
               </ul>
-            </motion.div>
-
-            {/* Hours */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <h3 className="font-bold text-white mb-4 text-base">Çalışma Saatleri</h3>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-orange-500" />
-                  <span className="text-slate-400 text-sm font-medium">Hafta İçi: 08:30 - 21:00</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-orange-500" />
-                  <span className="text-slate-400 text-sm font-medium">Hafta Sonu: 08:00 - 22:00</span>
-                </li>
-              </ul>
-            </motion.div>
+            </div>
 
             {/* Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="lg:col-span-2"
-            >
-              <h3 className="font-bold text-white mb-4 text-base">Rezervasyon & İletişim</h3>
+            <div className="lg:col-span-3">
+              <h3 className="font-bold text-white mb-4 text-base">İletişim & Adres</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
@@ -160,12 +91,29 @@ const Footer = () => {
                   <div className="flex flex-col space-y-1">
                     <a href="tel:05528610563" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Üreğil: (0552) 861 05 63</a>
                     <a href="tel:05398439735" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">MKM Kültür: (0539) 843 97 35</a>
-                    <a href="tel:05398439734" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Anadolu Sofrası: (0539) 843 97 34</a>
-                    <a href="tel:05398439687" className="text-slate-400 hover:text-orange-400 transition-colors text-sm font-medium">Saimekadın: (0539) 843 96 87</a>
                   </div>
                 </li>
+                <li className="flex items-center gap-3 mt-2">
+                  <Clock className="h-5 w-5 text-orange-500" />
+                  <span className="text-slate-400 text-sm font-medium">08:00 - 22:00</span>
+                </li>
               </ul>
-            </motion.div>
+            </div>
+
+            {/* Interactive Map */}
+            <div className="lg:col-span-4 h-full min-h-[200px] rounded-xl overflow-hidden shadow-lg border border-slate-800">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3060.0385906375084!2d32.9366!3d39.9197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d3510065a452bf%3A0xc68297b83d1c5a1!2zw5xyZcSfaWwgTWlsbGV0IEJhaMOnZXNp!5e0!3m2!1str!2str!4v1710000000000!5m2!1str!2str" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0, minHeight: '200px' }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mabel Kafe Harita"
+              ></iframe>
+            </div>
+
           </div>
         </div>
       </div>
@@ -180,7 +128,7 @@ const Footer = () => {
             <a href="https://www.instagram.com/mabelkaferestoran/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-orange-500 transition-colors">
               <Instagram className="h-6 w-6" />
             </a>
-            <a href="https://www.facebook.com/profile.php?id=61562143385926&ref=PROFILE_EDIT_xav_ig_profile_page_web#" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-orange-500 transition-colors">
+            <a href="https://www.facebook.com/profile.php?id=61562143385926" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-orange-500 transition-colors">
               <Facebook className="h-6 w-6" />
             </a>
           </div>
