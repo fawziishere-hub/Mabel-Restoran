@@ -100,8 +100,21 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Interactive Map */}
-            <div className="lg:col-span-4 h-full min-h-[200px] rounded-xl overflow-hidden shadow-lg border border-slate-800">
+            {/* Clickable Map linking directly to Google Maps Navigation */}
+            <a 
+              href="https://www.google.com/maps/dir/?api=1&destination=Üreğil+Millet+Bahçesi,+Mamak/Ankara" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="lg:col-span-4 h-full min-h-[200px] rounded-xl overflow-hidden shadow-lg border border-slate-800 relative block group cursor-pointer"
+            >
+              {/* Invisible overlay that catches the click and shows the hover button */}
+              <div className="absolute inset-0 z-10 bg-transparent group-hover:bg-slate-900/30 transition-all flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 bg-white text-orange-600 font-bold px-6 py-3 rounded-full shadow-2xl transition-all transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">
+                  <MapPin size={20} />
+                  Yol Tarifi Al
+                </div>
+              </div>
+              
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3060.0385906375084!2d32.9366!3d39.9197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d3510065a452bf%3A0xc68297b83d1c5a1!2zw5xyZcSfaWwgTWlsbGV0IEJhaMOnZXNp!5e0!3m2!1str!2str!4v1710000000000!5m2!1str!2str" 
                 width="100%" 
@@ -111,8 +124,9 @@ const Footer = () => {
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Mabel Kafe Harita"
+                className="pointer-events-none" // Prevents iframe from trapping the mouse
               ></iframe>
-            </div>
+            </a>
 
           </div>
         </div>
