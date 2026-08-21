@@ -20,7 +20,7 @@ export const useLogin = () => {
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('email', data.email)
+        .eq('id', authData.user.id)
         .single();
 
       if (profileError && profileError.code !== 'PGRST116') {
