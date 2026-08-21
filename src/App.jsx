@@ -27,17 +27,22 @@ import AdminDashboard from "./pages/AdminDashboard";
 const queryClient = new QueryClient();
 
 // Security Wrapper for Role-Based Access Control
-const ProtectedRoute = ({ children, requireAdmin = false }) => {
+const ProtectedRoute = ({ children, requireAdmin = false, redirectAdmin = false }) => {
   const tokenData = JSON.parse(localStorage.getItem("token") || "null");
   
-  // Not logged in? Kick them to the auth page.
+  // 1. Not logged in? Kick them to the auth page.
   if (!tokenData || !tokenData.token) {
     return <Navigate to="/auth" replace />;
   }
 
-  // Logged in, but trying to access an admin route without admin privileges? Kick them to the customer dashboard.
+  // 2. Logged in, but trying to access an admin route without admin privileges? Kick them to the customer dashboard.
   if (requireAdmin && tokenData.user?.role !== "admin") {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // 3. THE FIX: Logged in as Admin, but trying to access customer dashboard? Kick them to Admin dashboard.
+  if (redirectAdmin && tokenData.user?.role === "admin") {
+    return <Navigate to="/admin" replace />;
   }
 
   return children;
@@ -66,11 +71,11 @@ function AppContent() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/contact" element={<ContactPage />} />
 
-          {/* Customer Protected Route */}
+          {/* Customer Protected Route - Notice the new redirectAdmin={true} */}
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectAdmin={true}>
                 <DashboardPage />
               </ProtectedRoute>
             } 
