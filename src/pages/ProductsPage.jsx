@@ -13,10 +13,10 @@ const mockProducts = [
   
   // YUMURTALAR
   { id: 3, name: "Menemen", category: "Yumurtalar", price: "120 ₺", desc: "Taze domates ve biberle hazırlanan, sıcak servis edilen klasik lezzet.", image: "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&q=80" },
-  { id: 4, name: "Peynirli Yumurta", category: "Yumurtalar", price: "120 ₺", desc: "Taze peynir ile hazırlanan sıcacık sahanda yumurta.", image: "https://images.unsplash.com/photo-1525916053330-80d5dcecdbf3?w=800&q=80" },
+  { id: 4, name: "Peynirli Yumurta", category: "Yumurtalar", price: "120 ₺", desc: "Taze peynir ile hazırlanan sıcacık sahanda yumurta.", image: "/images/images (12).jpeg" },
   { id: 5, name: "Sahanda Yumurta", category: "Yumurtalar", price: "125 ₺", desc: "Tereyağında tam kıvamında pişirilmiş sahanda yumurta.", image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=800&q=80" },
-  { id: 6, name: "Sahanda Kaşarlı Yumurta", category: "Yumurtalar", price: "125 ₺", desc: "Eriyen bol kaşar peynirli nefis sahanda yumurta.", image: "https://images.unsplash.com/photo-1510693206411-fa2b4cbabff1?w=800&q=80" },
-  { id: 7, name: "Sahanda Sucuklu Yumurta", category: "Yumurtalar", price: "165 ₺", desc: "Özel kasap sucuk ile hazırlanan enfes lezzet.", image: "https://images.unsplash.com/photo-1628292850388-3ef0b81e4c70?w=800&q=80" },
+  { id: 6, name: "Sahanda Kaşarlı Yumurta", category: "Yumurtalar", price: "125 ₺", desc: "Eriyen bol kaşar peynirli nefis sahanda yumurta.", image: "/images/images (13).jpeg" },
+  { id: 7, name: "Sahanda Sucuklu Yumurta", category: "Yumurtalar", price: "165 ₺", desc: "Özel kasap sucuk ile hazırlanan enfes lezzet.", image: "/images/images (14).jpeg" },
   { id: 8, name: "Sahanda Kavurmalı Yumurta", category: "Yumurtalar", price: "285 ₺", desc: "Özel kavurma etiyle hazırlanan doyurucu bir lezzet.", image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&q=80" },
 
   // GÖZLEMELER
@@ -32,9 +32,9 @@ const mockProducts = [
 
   // TOSTLAR VE APERATİFLER
   { id: 18, name: "Sade Tost (Ekmek)", category: "Tostlar & Aperatifler", price: "50 ₺", desc: "Geleneksel, çıtır sade ekmek tostu.", image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&q=80" },
-  { id: 19, name: "Kaşarlı Tost", category: "Tostlar & Aperatifler", price: "125 ₺", desc: "Bol eriyen kaşarlı klasik sıcak tost.", image: "https://images.unsplash.com/photo-1628292850388-3ef0b81e4c70?w=800&q=80" },
+  { id: 19, name: "Kaşarlı Tost", category: "Tostlar & Aperatifler", price: "125 ₺", desc: "Bol eriyen kaşarlı klasik sıcak tost.", image: "/images/images (15).jpeg" },
   { id: 20, name: "Sucuklu Tost", category: "Tostlar & Aperatifler", price: "145 ₺", desc: "Gerçek kasap sucuk ile hazırlanan doyurucu tost.", image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&q=80" },
-  { id: 21, name: "Karışık Tost", category: "Tostlar & Aperatifler", price: "150 ₺", desc: "Sucuk ve kaşarın muhteşem uyumu.", image: "https://images.unsplash.com/photo-1628292850388-3ef0b81e4c70?w=800&q=80" },
+  { id: 21, name: "Karışık Tost", category: "Tostlar & Aperatifler", price: "150 ₺", desc: "Sucuk ve kaşarın muhteşem uyumu.", image: "/images/images (16).jpeg" },
   { id: 22, name: "Patates Tava", category: "Tostlar & Aperatifler", price: "120 ₺", desc: "Çıtır çıtır, altın sarısı kızarmış patates dilimleri.", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=800&q=80" },
   { id: 23, name: "Soğan Halkası", category: "Tostlar & Aperatifler", price: "120 ₺", desc: "Altın sarısı çıtır soğan halkaları.", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=800&q=80" },
 
