@@ -1,50 +1,132 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Phone, Calendar, Clock, MapPin, MessageSquare, Send } from "lucide-react";
 import { motion } from "framer-motion";
-import { supabase } from "../supabaseClient"; // <-- Import Supabase!
+import { supabase } from "../supabaseClient";
 import { toast } from "react-toastify";
+
+// --- Date/time helpers ---
+
+// Local (not UTC) today, so this is correct for Turkey time regardless of the visitor's browser
+const getTodayLocalISO = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+};
+
+const isWeekend = (dateStr) => {
+  const day = new Date(dateStr + "T00:00:00").getDay(); // 0 = Sunday, 6 = Saturday
+  return day === 0 || day === 6;
+};
+
+// Generates every half-hour slot within opening hours for the given date.
+// Weekday/weekend hours pulled from your ContactPage - adjust here if those ever change.
+const generateSlotsForDate = (dateStr) => {
+  if (!dateStr) return [];
+  const weekend = isWeekend(dateStr);
+  const [openH, openM] = weekend ? [8, 0] : [8, 30];
+  const [closeH, closeM] = weekend ? [22, 0] : [21, 0];
+
+  const slots = [];
+  let h = openH, m = openM;
+  while (h < closeH || (h === closeH && m <= closeM)) {
+    slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    m += 30;
+    if (m >= 60) { m = 0; h += 1; }
+  }
+  return slots;
+};
+
+const isPastSlot = (dateStr, timeStr) => {
+  if (dateStr !== getTodayLocalISO()) return false; // only today's slots can be "in the past"
+  const [h, m] = timeStr.split(":").map(Number);
+  const slotTime = new Date();
+  slotTime.setHours(h, m, 0, 0);
+  return slotTime <= new Date();
+};
 
 export default function ReservationPage() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // State to hold our form inputs
-  const [formData, setFormData] = useState({ 
-    name: "", 
-    phone: "", 
-    date: "", 
-    time: "", 
-    guests: "", 
-    area: "", 
-    notes: "" 
+  const [bookedTimes, setBookedTimes] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "", phone: "", date: "", time: "", guests: "", area: "", notes: ""
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Whenever the date changes, ask the database which slots on that day are already taken
+  useEffect(() => {
+    if (!formData.date) { setBookedTimes([]); return; }
+    let cancelled = false;
+    setLoadingSlots(true);
+    supabase
+      .rpc("get_booked_times", { check_date: formData.date })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("Error fetching booked times:", error);
+          setBookedTimes([]);
+        } else {
+          setBookedTimes((data || []).map((row) => row.reservation_time.slice(0, 5)));
+        }
+      })
+      .finally(() => { if (!cancelled) setLoadingSlots(false); });
+    return () => { cancelled = true; };
+  }, [formData.date]);
+
+  const availableSlots = useMemo(() => {
+    return generateSlotsForDate(formData.date).filter(
+      (slot) => !isPastSlot(formData.date, slot) && !bookedTimes.includes(slot)
+    );
+  }, [formData.date, bookedTimes]);
+
+  // If the selected date/time combo becomes invalid (date changed, or someone else just took it),
+  // clear the stale selection instead of letting it silently submit
+  useEffect(() => {
+    if (formData.time && !availableSlots.includes(formData.time)) {
+      setFormData((prev) => ({ ...prev, time: "" }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availableSlots]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.date < getTodayLocalISO()) {
+      toast.error("Geçmiş bir tarih için rezervasyon yapılamaz.");
+      return;
+    }
+
     setIsSubmitting(true);
-
     try {
-      // Send the data to the 'reservations' table (renamed from 'quotes')
       const { error } = await supabase
-        .from('reservations')
-        .insert([
-          {
-            full_name: formData.name,
-            phone: formData.phone,
-            reservation_date: formData.date,
-            reservation_time: formData.time,
-            guest_count: formData.guests,
-            area_preference: formData.area,
-            notes: formData.notes
-          }
-        ]);
+        .from("reservations")
+        .insert([{
+          full_name: formData.name,
+          phone: formData.phone,
+          reservation_date: formData.date,
+          reservation_time: formData.time,
+          guest_count: formData.guests,
+          area_preference: formData.area,
+          notes: formData.notes
+        }]);
 
-      if (error) throw error;
+      if (error) {
+        // Postgres unique-violation code: someone else grabbed this exact slot
+        // in the moment between this form loading and being submitted
+        if (error.code === "23505") {
+          toast.error("Üzgünüz, bu saat az önce başka biri tarafından alındı. Lütfen başka bir saat seçin.");
+          setFormData((prev) => ({ ...prev, time: "" }));
+          const { data } = await supabase.rpc("get_booked_times", { check_date: formData.date });
+          setBookedTimes((data || []).map((row) => row.reservation_time.slice(0, 5)));
+          return;
+        }
+        throw error;
+      }
 
       toast.success("Rezervasyon talebiniz başarıyla alındı!");
       navigate("/");
@@ -103,7 +185,7 @@ export default function ReservationPage() {
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Tarih</label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input required name="date" value={formData.date} onChange={handleChange} type="date" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-11 pr-4 focus:border-orange-500 focus:outline-none dark:text-white" />
+                  <input required name="date" value={formData.date} min={getTodayLocalISO()} onChange={handleChange} type="date" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-11 pr-4 focus:border-orange-500 focus:outline-none dark:text-white" />
                 </div>
               </div>
 
@@ -111,7 +193,21 @@ export default function ReservationPage() {
                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Saat</label>
                 <div className="relative">
                   <Clock className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input required name="time" value={formData.time} onChange={handleChange} type="time" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-11 pr-4 focus:border-orange-500 focus:outline-none dark:text-white" />
+                  <select
+                    required
+                    name="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    disabled={!formData.date || loadingSlots}
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-11 pr-4 focus:border-orange-500 focus:outline-none dark:text-white appearance-none disabled:opacity-60"
+                  >
+                    <option value="">
+                      {!formData.date ? "Önce tarih seçin" : loadingSlots ? "Yükleniyor..." : availableSlots.length === 0 ? "Bu tarihte uygun saat yok" : "Saat seçiniz..."}
+                    </option>
+                    {availableSlots.map((slot) => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
