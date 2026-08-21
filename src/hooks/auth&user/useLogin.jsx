@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { supabase } from "../../supabaseClient"; // <-- FIXED PATH
+import { supabase } from "../../supabaseClient"; 
 
 export const useLogin = () => {
   const navigate = useNavigate();
@@ -30,19 +30,22 @@ export const useLogin = () => {
       // 3. Merge profile data (like role and name) into the user object
       const userWithRole = { 
         ...authData.user, 
-        role: profile?.role || 'customer', // Default to customer if no role is found
+        role: profile?.role || 'customer', 
         name: profile?.full_name || profile?.name || 'Kullanıcı'
       };
 
+      // Return the ENRICHED user
       return { session: authData.session, user: userWithRole };
     },
-    onSuccess: (authData) => {
+    
+    // Notice we use "data" here now, which is exactly what mutationFn returned above!
+    onSuccess: (data) => {
       // Save the enriched user data to local storage
       localStorage.setItem(
         "token",
         JSON.stringify({
-          token: authData.session.access_token,
-          user: authData.user,
+          token: data.session.access_token,
+          user: data.user, // This now successfully includes the role!
         })
       );
       
@@ -53,8 +56,8 @@ export const useLogin = () => {
       
       toast.success("Başarıyla giriş yapıldı!");
 
-      // RBAC MAGIC: Route based on role
-      if (authData.user.role === "admin") {
+      // RBAC MAGIC: Route based on the successfully saved role
+      if (data.user.role === "admin") {
         navigate("/admin", { replace: true });
       } else {
         navigate("/dashboard", { replace: true });
