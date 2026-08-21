@@ -8,7 +8,7 @@ const itemVariants = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 
 // ENTIRE MENU FROM WHITEBOARD WITH PERMANENT UNSPLASH IMAGES
 const mockProducts = [
   // KAHVALTI
-  { id: 1, name: "Serpme Kahvaltı (2 Kişilik)", category: "Kahvaltı", price: "775 ₺", desc: "Bol çeşitli, doyurucu ve yöresel lezzetlerle dolu iki kişilik serpme kahvaltı.", image: "https://images.unsplash.com/photo-1628292850388-3ef0b81e4c70?w=800&q=80" },
+  { id: 1, name: "Serpme Kahvaltı (2 Kişilik)", category: "Kahvaltı", price: "775 ₺", desc: "Bol çeşitli, doyurucu ve yöresel lezzetlerle dolu iki kişilik serpme kahvaltı.", image: "/images/images (11).jpeg" },
   { id: 2, name: "Kahvaltı Tabağı", category: "Kahvaltı", price: "330 ₺", desc: "Güne hızlı ve lezzetli bir başlangıç yapmak isteyenler için ideal.", image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&q=80" },
   
   // YUMURTALAR
