@@ -30,7 +30,7 @@ const Footer = () => {
                 initial={{ scale: 1.1, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8 }}
-                src="/images/unnamed (3).jpg"
+                src="/images/20.jpg"
                 alt="Mabel Kafe Bahçe"
                 className="absolute inset-0 w-full h-full object-cover opacity-90"
               />
