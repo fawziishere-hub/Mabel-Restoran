@@ -29,18 +29,18 @@ export default function ReservationPage() {
     setIsSubmitting(true);
 
     try {
-      // Send the data directly to your Supabase 'quotes' table
+      // Send the data to the 'reservations' table (renamed from 'quotes')
       const { error } = await supabase
-        .from('quotes')
+        .from('reservations')
         .insert([
           {
-            ad_soyad: formData.name,
-            telefon: formData.phone,
-            tarih: formData.date,
-            saat: formData.time,
-            kisi_sayisi: formData.guests,
-            tercih_yeri: formData.area,
-            mesaj: formData.notes
+            full_name: formData.name,
+            phone: formData.phone,
+            reservation_date: formData.date,
+            reservation_time: formData.time,
+            guest_count: formData.guests,
+            area_preference: formData.area,
+            notes: formData.notes
           }
         ]);
 
