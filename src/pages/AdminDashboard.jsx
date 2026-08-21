@@ -16,6 +16,9 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [reservations, setReservations] = useState([]);
   const [reservationsLoading, setReservationsLoading] = useState(true);
+  
+  // NEW: Search state
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchReservations();
@@ -65,16 +68,27 @@ const AdminDashboard = () => {
     toast.success("Rezervasyon onaylandı!");
   };
 
+  const handleNotificationClick = () => {
+    toast.info("Şu an okunmamış yeni bir bildiriminiz yok.");
+  };
+
+  // NEW: Filter logic for the Search Bar
+  const filteredReservations = reservations.filter((res) => {
+    const term = searchQuery.toLowerCase();
+    const name = (res.full_name || res.ad_soyad || "").toLowerCase();
+    const phone = res.phone || res.telefon || "";
+    return name.includes(term) || phone.includes(term);
+  });
+
   const pendingCount = reservations.filter((r) => r.status !== "Onaylandı").length;
   const approvedCount = reservations.filter((r) => r.status === "Onaylandı").length;
 
   return (
     <div className="min-h-screen bg-slate-50 flex dark:bg-slate-950">
       
-      {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex fixed h-full z-20">
         <div className="p-6 flex items-center gap-4 border-b border-slate-800">
-          <img src="/images/450201304_1539576273654166_470384146796434157_n (1).jpg" alt="Mabel Logo" className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 shadow-md" />
+          <img src="/images/20.jpg" alt="Mabel Logo" className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 shadow-md" />
           <span className="text-2xl font-black tracking-tight text-white">Mabel <span className="text-orange-500">Admin</span></span>
         </div>
         <nav className="flex-1 p-4 space-y-2">
@@ -89,28 +103,41 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 md:ml-64 p-6 lg:p-10">
         
-        {/* Topbar */}
         <header className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Yönetim Paneli</h1>
             <p className="text-slate-500 font-medium mt-1">Gelen rezervasyon taleplerini yönetin.</p>
           </div>
           <div className="flex items-center gap-4">
+            
+            {/* FUNCTIONAL SEARCH BAR */}
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input type="text" placeholder="Ara..." className="pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full focus:outline-none focus:border-orange-500 shadow-sm" />
+              <input 
+                type="text" 
+                placeholder="İsim veya Telefon ara..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full focus:outline-none focus:border-orange-500 shadow-sm transition-all" 
+              />
             </div>
-            <button className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full text-slate-600 hover:text-orange-500 shadow-sm relative">
+            
+            {/* FUNCTIONAL NOTIFICATION BELL */}
+            <button 
+              onClick={handleNotificationClick}
+              className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full text-slate-600 hover:text-orange-500 shadow-sm relative transition-colors"
+            >
               <Bell size={20} />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-orange-500 rounded-full border-2 border-white"></span>
+              {pendingCount > 0 && (
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-orange-500 rounded-full border-2 border-white"></span>
+              )}
             </button>
+
           </div>
         </header>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-4">
             <div className="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center"><Clock size={28} /></div>
@@ -128,16 +155,17 @@ const AdminDashboard = () => {
           </motion.div>
         </div>
 
-        {/* Full Width Reservations Table */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Tüm Rezervasyonlar</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              {searchQuery ? "Arama Sonuçları" : "Tüm Rezervasyonlar"}
+            </h2>
           </div>
           <div className="overflow-x-auto">
             {reservationsLoading ? (
               <p className="p-6 text-slate-500 text-sm font-medium">Yükleniyor...</p>
-            ) : reservations.length === 0 ? (
-              <p className="p-6 text-slate-500 text-sm font-medium">Henüz rezervasyon yok.</p>
+            ) : filteredReservations.length === 0 ? (
+              <p className="p-6 text-slate-500 text-sm font-medium">Kayıt bulunamadı.</p>
             ) : (
               <table className="w-full text-left">
                 <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 text-sm">
@@ -150,7 +178,7 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {reservations.map((res) => (
+                  {filteredReservations.map((res) => (
                     <tr key={res.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       <td className="px-6 py-4">
                         <p className="font-bold text-slate-900 dark:text-white">{res.full_name || res.ad_soyad}</p>
