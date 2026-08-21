@@ -51,9 +51,7 @@ export const useLogin = () => {
         JSON.stringify(Date.now() + 24 * 60 * 60 * 1000)
       );
       
-      // 🚨 GOD MODE DEBUGGER: This will pop up on your screen when you log in!
-      alert(`Debug: Veritabanından çekilen rolünüz -> "${data.user.role}"`);
-
+     
       // RBAC Route logic
       if (data.user.role === "admin") {
         toast.success("Yönetici girişi başarılı!");
